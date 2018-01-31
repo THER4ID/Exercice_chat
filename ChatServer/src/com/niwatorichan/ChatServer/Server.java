@@ -17,23 +17,12 @@ public class Server {
 
     //String ip;
     int port;
-
-    public LinkedList<User> getListUser() {
-        return listUser;
-    }
-
-    public ArrayList<ClientThread> getListClientThread() {
-        return listClientThread;
-    }
     LinkedList<User> listUser;
     ArrayList<ClientThread> listClientThread;
     boolean keepGoing;
     int UniqueID;
     ConnectionThread ct;
 
-    public boolean getServerState(){
-        return keepGoing;
-    }
 
     public Server(int port){
         //this.ip=ip;
@@ -42,10 +31,24 @@ public class Server {
         UniqueID=0;
     }
 
+    
+    //Getters and Setters
+    public LinkedList<User> getListUser() {
+        return listUser;
+    }
+
+    public ArrayList<ClientThread> getListClientThread() {
+        return listClientThread;
+    }
+    
+    public boolean getServerState(){
+        return keepGoing;
+    }
+
+    //Methodes
     private int GiveUniqueID(){
         return (this.UniqueID+=1);
     }
-
     public User addUser(String username){
         User user = new User();
         user.setUsername(username);
@@ -81,12 +84,16 @@ public class Server {
         
     }
     
-    public void stop(){
-        keepGoing=false;
+    public void stop() throws IOException{
+        
+     keepGoing=false;
 
-     for(ClientThread ct : listClientThread){
-            ct.
+     for(ClientThread clientth : listClientThread){
+            clientth.close();
      }
+     
+     ct = null;
+     
     }
     
 
