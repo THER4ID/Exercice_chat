@@ -28,5 +28,33 @@ public class Client {
         this.username = username;
         this.port = port;
     }
+
+    public showMessage(string msg){
+        if(msg!=null){
+            Console.println(msg);
+        }
+    }
+
+    
+    public void sendMessage(ChatMessage msg) {
+
+        try {
+
+            output.writeObject(msg);
+
+        }
+
+        catch(IOException e) {
+
+            showMessage("Exception lié à l'envoi au serveur " + e);
+
+        }
+
+    }
+
+
+    public boolean start(){
+
+    }
     
 }
