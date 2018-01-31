@@ -88,13 +88,54 @@ public class Server {
         
      keepGoing=false;
 
-     for(ClientThread clientth : listClientThread){
-            clientth.close();
-     }
-     
-     ct = null;
-     
+        for(ClientThread ct : listClientThread){
+            ct.
+        }
     }
     
+    private synchronized void broadcast(String message) {
+
+        
+        String messageLf = message + "\n";
+
+        // display message on console or GUI
+
+        //sg représente le server GUI, donc ce qui concerne l'interface
+        if(sg == null)
+
+            System.out.print(messageLf);
+
+        else
+
+            sg.appendRoom(messageLf);     // append in the room window
+
+         
+
+        // we loop in reverse order in case we would have to remove a Client
+
+        // because it has disconnected
+
+        for(int i = listClientThread.size(); --i >= 0;) {
+
+            ClientThread ct = listClientThread.get(i);
+
+            // try to write to the Client if it fails remove it from the list
+
+            if(!ct.writeMsg(messageLf)) {
+
+                listClientThread.remove(i);
+
+                System.out.println("Disconnected Client " + ct.user + " removed from list.");
+
+            }
+
+        }
+
+    }
+
+}
+
+  
+
 
 }
