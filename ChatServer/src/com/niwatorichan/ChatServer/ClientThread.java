@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,12 +18,13 @@ public class ClientThread extends Thread{
 
     Socket socket;
     User user;
+    Server server;
     ChatMessage cm;
     ObjectInputStream input;
     ObjectOutputStream output;
 
     public ClientThread(Socket socket, Server server){
-            
+            this.server=server;
             this.socket=socket;
             server.showMessage("Création des flux d'entrée / sortie");
 
@@ -49,6 +52,9 @@ public class ClientThread extends Thread{
     public void run(){
 
              boolean keepGoing = true;
+
+            ArrayList<ClientThread> al = server.getListClientThread();
+
             while(keepGoing) {
 
 
@@ -60,7 +66,7 @@ public class ClientThread extends Thread{
 
                 catch (IOException e) {
 
-                    server.showMessage(user.username + " Exception reading Streams: " + e);
+                    server.showMessage(user.getUsername() + " Exception reading Streams: " + e);
 
                     keepGoing=false;             
 
@@ -83,13 +89,13 @@ public class ClientThread extends Thread{
 
                 case MESSAGE:
 
-                    server.broadcast(user.username + ": " + message);
+                    server.broadcast(user.getUsername() + ": " + message);
 
                     break;
 
                 case LOGOUT:
 
-                    server.showMessage(user.username + " disconnected with a LOGOUT message.");
+                    server.showMessage(user.getUsername() + " disconnected with a LOGOUT message.");
 
                     keepGoing = false;
 
@@ -97,7 +103,7 @@ public class ClientThread extends Thread{
 
                 case WHOISIN:
 
-                    server.writeMsg("List of the users connected at " + sdf.format(new Date()) + "\n");
+                    server.writeMsg("List of the users connected  \n");
 
                     // scan al the users connected
 
@@ -105,7 +111,7 @@ public class ClientThread extends Thread{
 
                         ClientThread ct = al.get(i);
 
-                        server.writeMsg((i+1) + ") " + ct.username + " since " + ct.date);
+                        server.writeMsg((i+1) + ") " + ct.getName() + " since " + ct.date);
 
                     }
 
@@ -114,8 +120,10 @@ public class ClientThread extends Thread{
                 }
 }
     }
+    }
 
-    public void close(){
+
+    public void close() throws IOException{
         input.close();
         output.close();
         socket.close();

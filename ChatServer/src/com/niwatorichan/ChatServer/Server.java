@@ -17,6 +17,14 @@ public class Server {
 
     //String ip;
     int port;
+
+    public LinkedList<User> getListUser() {
+        return listUser;
+    }
+
+    public ArrayList<ClientThread> getListClientThread() {
+        return listClientThread;
+    }
     LinkedList<User> listUser;
     ArrayList<ClientThread> listClientThread;
     boolean keepGoing;
